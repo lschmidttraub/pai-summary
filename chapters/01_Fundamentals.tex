@@ -1,17 +1,14 @@
 \section{Fundamentals}
-\begin{framed}
     \textbf{Useful PDFs:} \\
     \textbf{Normal}:$\frac{\exp \left(-\frac{1}{2}(\vx - \vmu)^T \Sigma^{-1} (\vx - \vmu) \right)}{\sqrt{(2\pi)^k \det{\Sigma}}}$ \\
     \textbf{Beta}: $\Beta[\theta]{\alpha}{\beta} \propto \theta^{\alpha-1} (1-\theta)^{\beta-1}$ \\
     \textbf{Laplace}: $\frac{1}{2l}\exp\left(-\frac{\abs{x - \mu}}{l}\right)$
-\end{framed}
 \begin{framed}
     \textbf{Properties of Expectation:}\\
     $\E{\vg(\rX)} = \int_{\rX(\Omega)} \vg(\vx) \cdot p(\vx) \,d\vx$ (if $\vg$ nice and $\rX$ cont.) (\textbf{LOTUS})\\
     $\E[\rY]{\E[\rX]{\rX \mid \rY}} = \E{\rX}$ (\textbf{Tower rule})
 \end{framed} 
 \textbf{Covariance}: $\Cov{\rX, \rY} \defeq \E{(\rX - \E{\rX})\transpose{(\rY - \E{\rY})}}$
-\textbf{Uncorrelated} iff $\Cov{\rX, \rY} = \mzero$.\\
 \textbf{Correlation}: $\Cor{\rX,\rY}(i,j) \defeq \frac{\Cov{X_i,Y_j}}{\sqrt{\Var{X_i} \Var{Y_j}}}$\\
 \textbf{Variance}: $\Var{\rX} \defeq \Cov{\rX, \rX}$ \\
 \begin{framed}
@@ -27,23 +24,19 @@ $\rY=g(\rX)\implies p_\rY(\vy) = p_\rX(\inv{\vg}(\vy)) \cdot \abs{\det{\jac \inv
 \begin{framed}
 \textbf{Bayes' rule}: 
 $p(\vx \mid \vy) = \frac{p(\vy \mid \vx) \cdot p(\vx)}{p(\vy)}$\\
+\end{framed}
     Posterior $p(\vx \mid \vy)$,
     Prior $p(\vx)$,
     (Conditional) likelihood $p(\vy \mid \vx)$,
     Joint likelihood $p(\vx, \vy)$,
     Marginal likelihood $p(\vy)$. 
+\begin{framed}
+\textbf{Marginal and conditional of Gaussians}:
+Given $A,B\subseteq\{1,\dots,n\}$: $\rX_A\sim\N{\vmu_A}{\mSigma_A}$ and $\rX_A\mid\vx_B\sim\N{\vmu_A+\mSigma_{AB}\mSigma_B^{-1}(\vx_B-\vmu_B)}{\mSigma_A-\mSigma_{AB}\mSigma_B^{-1}\mSigma_{BA}}$\\
 \end{framed}
 \textbf{conjugate} iff prior and posterior from same family of distributions.\\
 \textbf{MLE}: $\vthetahat_\MLE \defeq\underset{\vtheta \in \Theta}{\argmax} p(y_{1:n} \mid \vx_{1:n}, \vtheta)$ \\
-\textbf{negative log-likelihood}: $\ell_\mathrm{nll}(\vtheta; \spD_n)$.\\
-MLE is \textbf{consistent} and \textbf{asymptotically normal} if $\vthetahat_\MLE \convp \opt{\vtheta}$ $\vthetahat_\MLE \convd \N{\opt{\vtheta}}{\mS_n}$ as $n \to \infty$. \\
 \textbf{MAP estimate}:   $\vthetahat_\MAP \defeq \argmax_{\vtheta \in \Theta} p(\vtheta \mid \vx_{1:n}, y_{1:n})$\\
-\begin{framed}
-\textbf{Common regularizers}: \\
- $p(\vtheta) = \N[\vtheta]{\vzero}{\lambda \mI}$ $\rightarrow$ $-\log p(\vtheta) = \frac{\lambda}{2} \norm{\vtheta}_2^2 + \const$ \\
- $p(\vtheta) = \Laplace[\vtheta]{\vzero}{\lambda}$ $\rightarrow$ $-\log p(\vtheta) = \lambda \norm{\vtheta}_1 + \const$ \\
- uniform prior $\rightarrow$ $\const$ (no regularization)
- \end{framed}
 \begin{framed}
     \textbf{RM conditions}
     Given a function $M(\theta)$ and random variables $N(\theta)$ with $\mathbb E [N(\theta)] = M(\theta)$
@@ -51,3 +44,4 @@ MLE is \textbf{consistent} and \textbf{asymptotically normal} if $\vthetahat_\ML
     $a_t \geq 0$, $\sum_{t=0}^{\infty}{a_t} = \infty$, $\sum_{t=0}^{\infty}{a_t^2} < \infty$.
     + some niceness conditions
 \end{framed}
+\textbf{Woodbury}: $(\mA+\mU\mC\mV)^{-1} = \mA^{-1} - \mA^{-1}\mU(\mC^{-1}+ \mV\mA^{-1}\mU)^{-1}\mV\mA^{-1}$\\

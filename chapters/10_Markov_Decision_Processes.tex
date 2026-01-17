@@ -35,12 +35,12 @@ $\fnv_t$ corresponds the the optimal value function assuming only $t$ steps are 
     A \textbf{Partially observable Markov decision process (POMDP)} is a Markov process with \textbf{hidden states}, 
     a set of supplementary \textbf{observations} $\sY$, 
     and \textbf{observation probabilities} $o(y \mid x) \defeq \Pr{Y_t = y \mid X_t = x}$.
-\end{framed}
-\begin{framed}
     Given a POMDP, the corresponding \textbf{Belief-state Markov decision process} is a Markov decision process specified by the 
     \textbf{belief space} $\spB \defeq \Delta^{\sX}$; 
     the set of \textbf{actions} $\sA$; \textbf{transition probabilities} $\tau(b' \mid b, a) \defeq \Pr{B_{t+1} = b' \mid B_t = b, A_t = a}$;
     and \textbf{rewards} $\rho(b, a) \defeq \E[x \sim b]{r(x, a)} = \sum_{x \in \sX} b(x) r(x, a)$.\\
     $b_{t+1}(x) = \Pr{X_{t+1} = x \mid y_{1:t+1}, a_{1:t}} $ is deterministic.\\
-    $\Pr{y_{t+1} \mid b_t, a_t} = \E[x \sim b_t]{\E[x' \mid x, a_t]{\Pr{y_{t+1} \mid X_{t+1} = x'}}} = \sum_{x \in \sX} b_t(x) \sum_{x' \in \sX} p(x' \mid x, a_t) \cdot o(y_{t+1} \mid x')$.
+    $\Pr{y_{t+1} \mid b_t, a_t}$\\
+    $ = \E[x \sim b_t]{\E[x' \mid x, a_t]{\Pr{y_{t+1} \mid X_{t+1} = x'}}} $\\
+    $= \sum_{x \in \sX} b_t(x) \sum_{x' \in \sX} p(x' \mid x, a_t) \cdot o(y_{t+1} \mid x')$.
 \end{framed}

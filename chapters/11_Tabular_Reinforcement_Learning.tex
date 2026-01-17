@@ -33,8 +33,8 @@ With probability at least $1-\delta$, $R_\mathrm{max}$ reaches an $\epsilon$-opt
 \end{framed}
 \begin{framed}
     \textbf{Q learning}: 
-    Off/MF/C\\
-    $Q(x, a) \gets (1-\alpha_t)Q(x, a)+\alpha_t\parentheses*{r + \gamma \max\limits_{a' \in \sA} Q(x', a')}$\\
+    Off/MF/C $Q(x,a)\gets$\\
+    $(1-\alpha_t)Q(x, a)+\alpha_t\parentheses*{r + \gamma \max\limits_{a' \in \sA} Q(x', a')}$\\
 \end{framed}
 $(\alpha_t)_{t\in\Nat_0}$ satisfies RM + GLIE $\implies$ convergence for TD, SARSA and Q learning.\\
 All 3 methods can be initialized arbitrarily.
