@@ -21,6 +21,6 @@ $\hat f_t(x,a)=\mu_t(x,a)+\beta_t\eta(x,a)\sigma_t(x,a)$
 \end{framed}
 \textbf{Constrained optimization}: 
 $\max_\pi J_\mu(\pi;f)$ subject to $J_\mu^c(\pi;f)=\E[x\sim\mu,x_{1:\infty}\sim\pi, f]{\sum_{t=0}^{\infty}\gamma^t c(x_t)}\leq \delta$\\
-Assuming a family of plausible models $\mathcal M(\mathcal D)$, we can be \textbf{optimistic} w.r.t. rewards and pessimistic w.r.t. constraints.\\
+Assuming a family of plausible models $\mathcal M(\mathcal D)$, we can be \textbf{optimistic} w.r.t. rewards and \textbf{pessimistic} w.r.t. constraints.\\
 $\max_\pi \max_{f\in\mathcal M(\mathcal D)} J_\mu(\pi;f)$ subject to $\max_{f\in\mathcal M(\mathcal D)}J_\mu^c(\pi;f)\leq \delta$\\
 By Leo Schmidt-Traub -- based off of Nils Jensen's notes.
