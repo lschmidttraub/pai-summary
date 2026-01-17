@@ -1,21 +1,88 @@
 \section{Model-free Reinforcement Learning}
+\textbf{Parametric value function approximation}: learn approximation $\V{\vx; \vtheta}$ or $\Q{\vx}{\va; \vtheta}$ parametrized by $\vtheta$.
 Can view TD-learning as SGD on the squared loss $\ell(\vtheta; x, r, x') \defeq \frac{1}{2}\parentheses*{r + \gamma \old{\vtheta}(x') - \vtheta(x)}^2$. \\
-\textbf{Parametric value function approximation}: To scale to large state spaces, learn approximation
-of (action) value function $\V{\vx; \vtheta}$ or $\Q{\vx}{\va; \vtheta}$. For e.g. the parameters $\vtheta$ of a neural network.
 \begin{framed}
-    \textbf{Q-learning with function approximation}: In state $\vx$, pick action $a$; Observe $\vx'$, reward $r$. Update $\vtheta \gets \vtheta + \alpha_t \delta_\mathrm{B} \vphi(\vx, \va)$, where $\delta_\mathrm{B} \defeq r + \gamma \max_{\vap \in \spA} \Q*{\vxp}{\vap; \old{\vtheta}} - \Q*{\vx}{\va; \vtheta}$.
+    \textbf{Q-learning with function approximation}: scaling to large state spaces (Off/MF/C)\\ 
+    \textbf{Bellman error}: \\
+    $\delta_\mathrm{B} \defeq r + \gamma \max_{\vap \in \spA} \Q*{\vxp}{\vap; \old{\vtheta}} - \Q*{\vx}{\va; \vtheta}$.
+    Update:$\vtheta \gets \vtheta + \alpha_t \delta_\mathrm{B} \grad_\theta Q^\star(\vx, \va)$
+    with $\old{\vtheta}=\vtheta$ being treated as \textbf{constant} w.r.t. $\vtheta$.
 \end{framed}
 \begin{framed}
-    Given a policy $\pi$, the \textbf{advantage function} is $\a[\pi]{\vx}{\va} \defeq \q[\pi]{\vx}{\va} - \v[\pi]{\vx} = \q[\pi]{\vx}{\va} - \E[\vap \sim \pi(\vx)]{\q[\pi]{\vx}{\vap}}$
+    \textbf{DQN}: stabilizing targets\\
+    Train 2 separate networks: target network and online network.
+    $\ell_{\text{DQN}} \defeq \frac{1}{2}\parentheses*{r + \gamma \max_{\vap \in \spA} \Q*{\vxp}{\vap; \old{\vtheta}} - \Q*{\vx}{\va; \vtheta}}^2$.
+    Update target network with hard updates or Polyak averaging:
+    $\old{\vtheta} \gets \alpha \vtheta + (1-\alpha) \old{\vtheta}$\\
+    \textbf{DDQN}: avoiding maximization bias\\
+    Choose maximum action from online network and evaluate it with target network.
 \end{framed}
+\textbf{Policy optimization/Policy gradient methods}: directly optimize policy $\pi_\varphi$ instead of value function.\\
+\textbf{Trajectory distribution}: $\Pi_\varphi(\tau) \defeq p(x_0) \prod_{t=0}^{T-1} p(x_{t+1} \mid x_t, a_t) \pi_\varphi(a_t \mid x_t)$\\
+\begin{framed}
+    \textbf{Policy value function}: $\j{\varphi}=\j{\pi_\varphi} \defeq \E[\pi_\varphi]{G_0} = \E[\pi_\varphi]{\sum_{t=0}^\infty \gamma^t R_t}$ \\
+    \textbf{Bounded variant}: $\j{\pi}[T] \defeq \E[\pi]{G_{0:T}}$\\
+\end{framed}
+\textbf{Score function trick}: $\grad_\varphi \E[\tau\sim\Pi_\varphi]{G_0} = \E[\tau\sim\Pi_\varphi]{G_0 \grad_\varphi \log \Pi_\varphi(\tau)}=\E[\tau\sim\Pi_\varphi]{G_0 \grad_\varphi \sum_{t=0}^{T-1}\log \pi_\varphi(a_t|x_t)}$.\\
+Has \textbf{high variance} unlike the reparametrization trick.\\
+\textbf{Baseline}: $\E[\tau\sim\Pi_\varphi]{G_0\grad_\varphi\log\Pi_\varphi(\tau)}=\E[\tau\sim\Pi_\varphi]{\sum_{t=0}^{T-1}(G_0-b_t)\grad_\varphi\log\pi_\varphi(a_t|x_t)}$\\
+\begin{framed}
+\textbf{REINFORCE} (On/MF/C): 
+Select baseline $b_t=g_{0:t-1}$:
+$\grad_\varphi \j{\varphi}[T]=\E[\tau\sim\Pi_\varphi]{\sum_{t=0}^{T-1}\gamma^tg_{t:T} \grad_\varphi \log \pi_\varphi(a_t|x_t)}$\\
+\end{framed}
+\begin{framed}
+\textbf{Policy gradient theorem}:\\
+$\grad j(\varphi)=\sum_{t=0}^{\infty}\mathbb{E}_{x_{t},a_{t} }\left[\gamma^tq^{\pi_{\varphi} }(x_{t},a_{t})\nabla_\varphi\log\pi_\varphi(a_t|x_t)\right]$\\
+$\propto \mathbb E_{x\sim\rho_\varphi^\infty}\mathbb E_{a\sim\pi_\varphi(a|x)}\left[q^{\pi_{\varphi} }(x,a)\nabla_\varphi\log\pi_\varphi(a|x)\right]$\\
+\end{framed}
+\begin{framed}
+  \textbf{Actor-Critic methods}: scaling to large action spaces\\
+   Parameterized policy $\pi(\va \mid \vx; \vvarphi) \eqdef \pi_\vvarphi$ (actor)\\
+   Value function approximation $\q[\pi_\vvarphi]{\vx}{\va} \approx \Q[\pi_\vvarphi]{\vx}{\va; \vtheta}$ (critic).\\
+\end{framed}
+\includegraphics[width=0.95\linewidth, trim={0 0 4cm 0}]{images/Online_actor_critic.png}
+\textbf{Advantage}: $\a[\pi]{\vx}{\va} \defeq \q[\pi]{\vx}{\va} - \v[\pi]{\vx}$\\
 $\text{$\pi$ is optimal} \iff \forall \vx \in \spX, \va \in \spA : \a[\pi]{\vx}{\va} \leq 0$
+\textbf{Advantage actor-critic (A2C)}: replace $Q$ with advantage function $A$ (predicting sign is easier than predicting absolute quantity).\\
+Advantage isn't directly parametrized: we parametrize $V^\pi$ and approximate $Q$ with $\sum_{t=k}^{T}\gamma^{t-k}r_{t}+\gamma^{T-k}V^\pi(x_{T+1})$.\\
+When compared to REINFORCE, actor-critic methods have \textbf{lower variance} and \textbf{higher bias}.\\
 \begin{framed}
-    The \textbf{policy value function} measures the discounted payoff of policy $\pi$: $\j{\pi} \defeq \E[\pi]{G_0} = \E[\pi]{\sum_{t=0}^\infty \gamma^t R_t}$, and the bounded variant: $\j{\pi}[T] \defeq \E[\pi]{G_{0:T}} = \E[\pi]{\sum_{t=0}^{T-1} \gamma^t R_t}$. Abbreviate $\j{\vvarphi} \defeq \j{\pi_\vvarphi}$
+    \textbf{TRPO}: improving sample efficiency in on-policy AC (On/MF/C)\\
+    $\varphi_{k+1} \gets \argmax_\varphi J(\varphi)$ subject to $\text{KL}(\pi_{\varphi_k}(\cdot \mid x) \| \pi_{\varphi}(\cdot \mid x)) \leq \delta$\\
+    $J(\varphi) \doteq \mathbb{E}_{x \sim \rho_{\varphi_k}^\infty, a \sim \pi_{\varphi_k}(\cdot \mid x)} \left[ w_k(\varphi; x, a) A^{\pi_{\varphi_k}}(x, a) \right]$\\
+    $w_k(\varphi; x, a) \doteq \frac{\pi_\varphi(a \mid x)}{\pi_{\varphi_k}(a \mid x)}$ are the importance sampling weights.
+
+    \textbf{PPO}: uncontrained objective
+    $\underset{\varphi}{\arg \max} J(\varphi) - \lambda \mathbb{E}_{x \sim \rho_{\varphi_k}^\infty} \text{KL} \left( \pi_{\varphi_k}(\cdot \mid x) \| \pi_{\varphi}(\cdot \mid x) \right)$\\
 \end{framed}
+\textbf{GRPO}: improving compute efficiency\\
+PPO with heuristic approximation of advantage\\
+$\hat{A}_{t,i}=\frac{g_{t:T}^{(i)}-\text{mean}(g_{t:T})}{\text{std}(g_{t:T})}$\\
 \begin{framed}
-  \textbf{Actor-Critic methods} consist of two components: a parameterized policy, $\pi(\va \mid \vx; \vvarphi) \eqdef \pi_\vvarphi$, which is called \textbf{actor}; and a value function approximation, $\q[\pi_\vvarphi]{\vx}{\va} \approx \Q[\pi_\vvarphi]{\vx}{\va; \vtheta}$, which is called\textbf{critic}.
-  In the following, we will abbreviate $\fnQ[\pi_\vvarphi]$ by $\fnQ$.
+\textbf{Off-policy AC}:
+Parametrize maximum over actions with $\pi_\varphi$.\\
+Objective: $\varphi^\star=\argmax_\varphi J_\mu(\varphi)=\argmax_\varphi \E[x\sim\mu]{Q^\star(x,\pi_\varphi(x);\theta)}$\\
+The \textbf{exploration distribution} $\mu(x)$ is typically selected as uniform sampling from replay buffer.\\
+Exploration can be achieved through \textbf{Gaussian dithering} as in \textbf{DDPG}.\\
+\textbf{TD3} = DDPG with 2 critic networks for evaluating policy and calculating maximum.\\
 \end{framed}
-Use gradient approximation: 
-\tiny{$\grad_\vvarphi \J{\vvarphi} \approx \sum_{t=0}^\infty\E[(\vx_t,\va_t) \sim \pi_\vvarphi]{\gamma^t \Q{\vx_t}{\va_t; \vtheta} \grad_\vvarphi \log \pi_\vvarphi(\va_t \mid \vx_t)}$}
-\includegraphics[width=0.95\linewidth, trim={0 0 4cm 0}, height=2.5cm]{Online_actor_critic.png}
+For randomized policies, we get:
+ $J_\mu(\varphi)=\mathbb E_{x\sim\mu}\E[a\sim\pi_\varphi(\cdot|x)]{Q^\star(x,a;\theta)}$\\
+ \textbf{Reparametrize} to get the gradient:
+ $\grad_\varphi J_\mu(\varphi)=\mathbb E_{x\sim\mu}\E[\varepsilon\sim\phi]{D_a Q^\star(x,a)\big|_{a=g(\varepsilon;\varphi)} D_\varphi g(\varepsilon;\varphi)}$\\
+\textbf{MERL}: encourage exploration through new objective: $j_\lambda(\varphi)=j(\varphi)+\lambda \H{\Pi_\varphi}$\\
+$\H{\Pi_\varphi} \defeq \E[\tau\sim\Pi_\varphi]{\sum_{t=0}^{T-1}\log \pi_\varphi(a_t|x_t)}$\\
+Assuming HMM defined by $p(\mathcal O_t|x_t,a_t)\propto \exp\left(\frac{1}{\lambda} r(x_t,a_t)\right)$, we get:\\
+$\Pi_\star(\tau)=p(\tau|\mathcal O_{1:T})\propto \left[p(x_1)\prod_{t=1}^{T-1} p(x_{t+1}|x_t,a_t)\right]\exp\left(\frac{1}{\lambda}\sum_{t=1}^{T} r(x_t,a_t)\right)$\\
+The objective $\KL{\Pi_\star}{\Pi_\varphi}$ is equivalent to the MERL objective.\\
+\textbf{Soft-value function}: $q^\star(x,a)=\frac{1}{\lambda}r(x,a)+\E[x'\sim x,a]{\log\int_\spA \exp\left(q^\star(x',a')\right) da'}$\\
+\begin{framed}
+    \textbf{Finetuning LLMs}:\\
+    \textbf{Bradley-Terry model}: $p(y_A\succ y_B|x,r)=\sigma(r(y_A|x)-r(y_B|x))$\\
+    \textbf{RLHF}: 
+    1. calculate reward with MLE ($\theta=\argmax_\theta p(\mathcal D|r_\theta)$)
+    2. calculate policy with PPO\\
+    \textbf{Optimal policy}: $\Pi_\star\propto \Pi_{\text{init}}\exp\left(\frac{1}{\lambda} r(y|x)\right)$\\
+    \textbf{DPO}: optimize over $r_\varphi(y|x)=\lambda\log\frac{\Pi_\varphi}{\Pi_{\text{init}}}+\text{const.}$\\
+\end{framed}

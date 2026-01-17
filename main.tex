@@ -41,7 +41,7 @@
 
 % Redefine section commands to use less space
 \titleformat{name=\section}[block]
-  {\sffamily\scriptsize}
+  {\sffamily\bfseries\scriptsize}
   {}
   {0pt}
   {\colorsection}
@@ -49,7 +49,7 @@
 %\makeatletter
 
 \newcommand{\colorsection}[1]{%
-  \colorbox{accent!20}{{\thesection\ #1}}}
+  \colorbox{accent!30}{{\color{black}\bfseries\thesection\ #1}}}
 
 %\renewcommand{\section}{\@startsection{section}{1}{0mm}%
                                 %{-1ex plus -.5ex minus -.2ex}%
@@ -200,7 +200,7 @@
 
 % Redefine section commands to use less space
 \titleformat{name=\section}[block]
-  {\sffamily\scriptsize}
+  {\sffamily\bfseries\scriptsize}
   {}
   {0pt}
   {\colorsection}
@@ -208,7 +208,7 @@
 %\makeatletter
 
 \newcommand{\colorsection}[1]{%
-  \colorbox{accent!20}{{\thesection\ #1}}}
+  \colorbox{accent!30}{{\color{black}\bfseries\thesection\ #1}}}
 
 %\renewcommand{\section}{\@startsection{section}{1}{0mm}%
                                 %{-1ex plus -.5ex minus -.2ex}%

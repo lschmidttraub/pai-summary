@@ -1,23 +1,42 @@
 \section{Tabular Reinforcement Learning}
-
+\textbf{The reinforcement learning problem}: probabilistic planning in unknown environments.
 A trajectory $\tau$ is a sequence: $\tau \defeq (\tau_0, \tau_1, \tau_2, \dots)$, with $\tau_i \defeq (x_i, a_i, r_i, x_{i+1})$.
-Agent can choose any policy $\rightarrow$ \textbf{on-policy} method. \\
-No choice of policy $\rightarrow$ \textbf{off-policy} method. \\
-\textbf{Model-based} $\rightarrow$ Learn the underlying MDP \\
-\textbf{Model-free} $\rightarrow$ Learn the value function directly.
 \begin{framed}
-    For model based approaches MLE yields: ${\hat{p}(x' \mid x, a) = \frac{N(x' \mid x, a)}{N(a \mid x)}}$ and \\ ${\hat{r}(x, a) = \frac{1}{N(a \mid x)} \sum_{t = 0, x_t = x,a_t = a}^\infty r_t}$
+\textbf{On-policy(On)}: Agent chooses policy. \\
+\textbf{Off-policy(Off)}: No choice of policy. More sample efficient, less stable. \\
+\textbf{Model-based(MB)}: Learn underlying MDP. More sample efficient, allows for planning and transfers well to new tasks.\\
+\textbf{Model-free(MF)}: Learn value function directly. Simpler, doesn't suffer from model bias, tends to perform better.\\
+\textbf{Value estimation(VE)}: Learn value function given policy.\\
+\textbf{Control(C)}: Determine optimal policy\\
 \end{framed}
-\includegraphics[width=0.95\linewidth,trim={0 0 3cm 0}]{images/epsilon_greedy.png}
-Will converge but will take time.
+\begin{framed}
+    A sequence $(\pi_t)_{t\in\Nat_0}$ of policies is \textbf{greedy in the limit of infinite exploration (GLIE)} if:\\
+    All pairs $(x, a)$ are visited infinitely often.\\
+    $\lim_{t\to\infty} \pi_t(a \mid x) = \mathbf{1}\{a=\arg\max_{a' \in \sA} Q^\star_t(x,a')\}$, where $Q^\star_t$ is the optimal action-value function for the estimated MDP at time $t$.\\
+\end{framed}
+Model-based MLE: ${\hat{p}(x' \mid x, a) = \frac{N(x' \mid x, a)}{N(a \mid x)}}$\\ ${\hat{r}(x, a) = \frac{1}{N(a \mid x)} \sum_{t = 0, x_t = x,a_t = a}^\infty r_t}$\\
+\textbf{$\varepsilon$-greedy}: With probability $\varepsilon$, choose a random action, otherwise choose the action with the highest value.
+$(\varepsilon_t)_{t\in\Nat_0}$ satisfies RM $\implies$ GLIE $\implies$ convergence.
+\textbf{softmax exploration}: $\pi(a \mid x) \propto \exp(Q(x, a)/\lambda)$ with temperature $\lambda > 0$.
 \includegraphics[width=0.95\linewidth, trim={0 0 3cm 0}]{images/R_max.png}
 With probability at least $1-\delta$, $R_\mathrm{max}$ reaches an $\epsilon$-optimal policy in a number of steps that is polynomial in $\card{\sX}$, $\card{\sA}$, $T$, $\nicefrac{1}{\epsilon}$, $\nicefrac{1}{\delta}$, and $R_\mathrm{max}$.
-\includegraphics[width=0.95\linewidth,trim={0 0 4cm 0}]{images/TD_learning.png}
-This is an on-policy method.
-\includegraphics[width=0.95\linewidth, trim={0 0 3cm 0}]{images/Q_learning.png}
-The Monte Carlo approximation does not depend on the policy $\rightarrow$ algorithm is off-policy. The update rule can also be expressed as: $\Q*{x}{a} \gets \Q*{x}{a} + \alpha_t\parentheses*{r + \gamma \max_{a' \in \sA} \Q*{x'}{a'} - \Q*{x}{a}}$.
 \begin{framed}
-    \textbf{RM conditions}: $\alpha_t \geq 0$, $\sum_{t=0}^{\infty}{\alpha_t} = \infty$, $\sum_{t=0}^{\infty}{\alpha_t^2} < \infty$.
+    \textbf{TD learning}: 
+    On/MF/VE\\
+    $V(x) \gets V(x) + \alpha_t\parentheses*{r + \gamma V(x') - V(x)}$\\
 \end{framed}
-If $\alpha_t$ satisfy RM conditions and every state-action pair is visited infinitely often, then we have convergence for both algorithms.
-\includegraphics[width=\linewidth]{images/REINFORCE.png}
+\begin{framed}
+    \textbf{SARSA}: 
+    On/MF/VE\\
+    $Q(x, a) \gets Q(x, a) + \alpha_t\parentheses*{r + \gamma Q(x', a') - Q(x, a)}$\\
+    Off-policy version (expected SARSA): $Q(x, a) \gets Q(x, a) + \alpha_t\parentheses*{r + \gamma \E[a' \sim \pi(x')]{Q(x', a')} - Q(x, a)}$\\
+\end{framed}
+\begin{framed}
+    \textbf{Q learning}: 
+    Off/MF/C\\
+    $Q(x, a) \gets (1-\alpha_t)Q(x, a)+\alpha_t\parentheses*{r + \gamma \max\limits_{a' \in \sA} Q(x', a')}$\\
+\end{framed}
+$(\alpha_t)_{t\in\Nat_0}$ satisfies RM + GLIE $\implies$ convergence for TD, SARSA and Q learning.\\
+All 3 methods can be initialized arbitrarily.
+\includegraphics[width=0.9\linewidth, trim={0 0 3cm 0}]{images/Optimistic_Q-learning.png}
+With probability at least $1-\delta$, Q learning converges to an $\epsilon$-optimal policy in a number of steps that is polynomial in $\card{\sX}$, $\card{\sA}$, $T$, $\nicefrac{1}{\epsilon}$, $\nicefrac{1}{\delta}$, and $R_\mathrm{max}$.

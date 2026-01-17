@@ -1,5 +1,26 @@
 \section{Model-based Reinforcement Learning}
+\textbf{Strict generalization} of model-free RL.
+\includegraphics[width=0.95\linewidth,trim={0 0 3cm 0}]{images/Model_based_reinforcement_learning.png}\\
+Assuming the dynamics are known and deterministic ($x_{t+1}=f(x_t,a_t)$):
+\textbf{MPC}: plan over finite time horizon $H$\\
+To solve the problem of \textbf{sparse rewards}, add $\gamma^H V(x_H)$ to the reward.\\
+\textbf{Target shooting}: generate random sequences of actions and choose the best one.
+(primitive \textbf{tree search} method)\\
+\textbf{Trajectory sampling} = MPC with stochastic dynamics\\
 
-\includegraphics[width=0.95\linewidth, ,trim={0 0 3cm 0}]{images/Model_based_reinforcement_learning.png}
-\includegraphics[width=0.95\linewidth,trim={0 0 3cm 0}]{images/MPC.png}
-By Nils Jensen --- nils.jensen@inf.ethz.ch --- HS2023
+\textbf{closed-loop control}: planning done online\\
+\textbf{open-loop control}: policy precomputed offline\\
+$\implies$ apply model-free techniques to the new objective\\
+\textbf{Learning dynamics}: $x_{t+1}\sim f(x_t,a_t;\psi)$
+(approximate) greedy opimization: \textbf{PILCO} for GPs, \textbf{PETS} for neural networks\\
+\begin{framed}
+\textbf{Thompson sampling}: sample $f$ from posterior and maximize\\
+\textbf{Optimistic exploration}: optimize over set $\mathcal M(\mathcal D)$ of "plausible" models\\
+\textbf{H-CURL}: \\$\pi_{t+1}=\argmax_\pi \max_{\eta(\cdot)\in[-1,1]^d} J_H(\pi;\hat f_t)$ with 
+$\hat f_t(x,a)=\mu_t(x,a)+\beta_t\eta(x,a)\sigma_t(x,a)$
+\end{framed}
+\textbf{Constrained optimization}: 
+$\max_\pi J_\mu(\pi;f)$ subject to $J_\mu^c(\pi;f)=\E[x\sim\mu,x_{1:\infty}\sim\pi, f]{\sum_{t=0}^{\infty}\gamma^t c(x_t)}\leq \delta$\\
+Assuming a family of plausible models $\mathcal M(\mathcal D)$, we can be \textbf{optimistic} w.r.t. rewards and pessimistic w.r.t. constraints.\\
+$\max_\pi \max_{f\in\mathcal M(\mathcal D)} J_\mu(\pi;f)$ subject to $\max_{f\in\mathcal M(\mathcal D)}J_\mu^c(\pi;f)\leq \delta$\\
+By Leo Schmidt-Traub -- based off of Nils Jensen's notes.

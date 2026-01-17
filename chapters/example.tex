@@ -52,18 +52,14 @@ Let $f : \R^d \rightarrow \R$ and $\alpha \in \R$. The set $f^{\leq \alpha} := \
 \textbf{Weierstrass Theorem}: Let  $f : \R^d \rightarrow \R$ be a continuous function and suppose there is a non-empty and bounded sublevel set $f^{\leq \alpha}$. Then $f$ has a global minimum. \\
 \Title{Convex programming}
 An \textbf{optimization problem} in standard form is given by: 
-\begin{align*}
-    \text{minimize }   &f_0(\xx) \\
-    \text{subject to } &f_i(\xx) \leq 0, i=1, \dots m \\
-                       &h_i(\xx) = 0 i=1, \dots, p
-\end{align*}
+$\text{minimize } f_0(\xx)$\\
+$\text{subject to } f_i(\xx) \leq 0, i=1, \dots m$\\
+$h_i(\xx) = 0 i=1, \dots, p$
 A \textbf{convex program} arises when the $f_i$ are convex functions and the $h_i$ are affine functions with domain $\R^d$. We call the region $X = \{\xx \in \R^d : f_i(\xx)\leq 0, i=1, \dots, m; h_i(\xx) =0, i=1, \dots p\}$ the \textbf{feasible region}, in this case it is a convex set. \\
 The \textbf{Lagrangian} is the functional $L : \mathcal{D} \times \R^m \rightarrow \R$ given by: $L(\xx, \mathbb{\lambda}, \mathbb{\nu}) = f_0(\xx) + \sum_{i=1}^m{\lambda_i f_i(\xx)} + \sum_{i=1}^p{\nu_i h_i(\xx)}$. We call the $\lambda_i, \nu_i$ are called \textbf{Lagrange multipliers}. The Lagrange \textbf{dual function} is $g : \R^m \times \R^p \rightarrow \R \cup \{- \infty\}$ defined by $g(\mathbb{\lambda}, \mathbb{\nu}) = \inf_{\xx \in D} L(\xx, \mathbb{\lambda}, \mathbb{\nu})$. \\
 \textbf{Weak duality} If $\xx$ is a feasible solution then $g(\mathbb{\lambda}, \mathbb{\nu}) \leq f_0(\xx)$, for all $\mathbb{\lambda} \in \R^m, \mathbb{\nu} \in \R^p$ with $\mathbb{\lambda} \geq 0$. \\
 The \textbf{Lagrangian dual problem} is given by:
-\begin{align*}
-    \text{maximize }   g(\mathbb{\lambda}, \mathbb{\nu}) && \text{subject to }  \mathbb{\lambda} \geq 0
-\end{align*}
+$\text{maximize } g(\mathbb{\lambda}, \mathbb{\nu}) \quad \text{subject to } \mathbb{\lambda} \geq 0$
 The equivalent minimization is always a convex program (even if the original program was not). \\
 \textbf{Slaters Condition}: If there is a Slater's point $\Tilde{\xx}$ (a point which satisfies all inequality constraints of the original program strictly), then the infimum value of the primal equals the supremum value of its Lagrange dual. Moreover, if this value is finite, it is attained by a feasible solution of the dual. This is called \textbf{strong duality}. \\
 \textbf{Karush-Kuhn-Tucker necessary conditions} Let $\Tilde{\xx}$ and $(\Tilde{\mathbb{\lambda}}, \Tilde{\mathbb{\nu}})$ be feasible solutions of the primal optimization problem and its Lagrangian dual repectively with zero duality gap. If all $f_i$ and $h_i$ are differentiable then: $\Tilde{\lambda}_i f_i(\Tilde{\xx}) = 0 $ for $i=1, \dots, m$ and $\nabla f_0(\Tilde{\xx}) + \sum_{i=1}^m{\Tilde{\lambda}_i \nabla f_i(\Tilde{\xx})} + \sum_{i=1}^p{\Tilde{\nu}_i \nabla h_i(\Tilde{\xx})} = 0$. \\

@@ -1,15 +1,25 @@
 \section{Bayesian Deep Learning}
 \begin{framed}
-    A deep \textbf{neural network} is a function: $\vf(\vx; \vtheta) \defeq \vvarphi(\mW_L \vvarphi(\mW_{L-1} ( \cdots \vvarphi(\mW_1 \vx))))$, where $\vtheta \defeq [\mW_1, \dots, \mW_L]$ is a vector of \textbf{weights}, and $\varphi : \R \to \R$ is a component-wise nonlinear \textbf{activation function}. Examples of such: \\
-    \textbf{Hyperbolic tangent}: $\mathrm{Tanh}(z) \defeq \frac{\exp(z) - \exp(-z)}{\exp(z) + \exp(-z)}$ \\
-    \textbf{Rectified linear unit}: $\mathrm{ReLU}(z) \defeq \max \{z, 0\} \in [0, \infty)$.
-\end{framed}
-\textbf{Softmax}: $\sigma_i(\vf) \defeq \frac{\exp(f_i)}{\sum_{j=1}^c \exp(f_j)}$ (classification)
-\begin{framed}
     \textbf{Bayesian neural networks}: Gaussian prior on weights $\vtheta \sim \N{\vzero}{\sigmap^2 \mI}$, and Gaussian likelihood to describe how well the data is described by the model: \\
     $y \mid \vx, \vtheta \sim \N{f(\vx; \vtheta)}{\sigman^2}$. The MAP estimate is: \\
     $\vthetahat_\MAP = \argmin_\vtheta \frac{1}{2 \sigmap^2} \norm{\vtheta}_2^2 + \frac{1}{2 \sigman^2} \sum_{i=1}^n (y_i - f(\vx_i; \vtheta))^2$. Update rule: $\vtheta \gets \vtheta(1 - \frac{\eta_t}{\sigmap^2}) + \eta_t \sum_{i=1}^n \grad \log p(y_i \mid \vx_i, \vtheta)$
 \end{framed}
-\textbf{Heteroscedastic Noise}: Use a neural network with 2 outputs $f_1, f_2$, and define: $y \mid \vx, \vtheta \sim \N{\mu(\vx; \vtheta)}{\sigma^2(\vx; \vtheta)}$ where $\mu(\vx; \vtheta) \defeq f_1(\vx; \vtheta)$ and $\sigma^2(\vx; \vtheta) \defeq \exp(f_2(\vx; \vtheta))$.
-$\log p(y_i \mid \vx_i, \vtheta) = \const - \frac{1}{2} \brackets*{\log \sigma^2(\vx_i; \vtheta) + \frac{(y_i - \mu(\vx_i; \vtheta))^2}{\sigma^2(\vx_i; \vtheta)}}$.
-Can approximate the predictive distribution by sampling from the variational posterior $p(\ys \mid \vxs, \vx_{1:n}, \vy_{1:n}) \approx \E[\theta \sim q_\vlambda]{p(\ys \mid \vxs, \vtheta)}\approx \frac{1}{m} \sum_{i=1}^m p(\ys \mid \vxs, \vtheta^{(i)})$.
+\textbf{Heteroscedastic Noise}: Use a neural network with 2 outputs $f_1, f_2$, and define: $y \mid \vx, \vtheta \sim \N{\mu(\vx; \vtheta)}{\sigma^2(\vx; \vtheta)}$ 
+where $\mu(\vx; \vtheta) \defeq f_1(\vx; \vtheta)$ and $\sigma^2(\vx; \vtheta) \defeq \exp(f_2(\vx; \vtheta))$.
+\begin{framed}
+    \textbf{Approximate inference}: \\
+    \textbf{Variational inference}: $p(y^\star \mid \vx^\star, \mathcal D) \approx \E[\theta \sim q_\vlambda]{p(y^\star \mid \vx^\star, \vtheta)}\approx \frac{1}{m} \sum_{i=1}^m p(\ys \mid \vxs, \vtheta^{(i)})$.
+    \textbf{MCMC}: store $T$ snapshots $\theta^{(1)}, \ldots, \theta^{(T)}$ 
+    and sample from Gaussian approximation: $\theta\sim\N{\vmu}{\mSigma}$ with 
+    $\vmu=\frac{1}{T}\sum_{i=1}^T \theta^{(i)}$ and \\$\mSigma=\frac{1}{T-1}\sum_{i=1}^T (\theta^{(i)} - \vmu)(\theta^{(i)} - \vmu)^T$.
+    \textbf{Probabilistic ensembles}: run $m$ models on $m$ independently sampled datasets and average the predictions.
+\end{framed}
+\textbf{Dropout/Dropconnect}: we also need to perform dropout/dropconnect during inference.\\
+\includegraphics[width=0.2\textwidth]{images/SVGD.png}
+\begin{framed}
+     \textbf{Expected calibration error}: For $m$ bins: $\ell_{\mathrm{ECE}} \defeq \sum_{m=1}^M \frac{\card{\sB_m}}{n} \abs{\mathrm{freq}(\sB_m) - \mathrm{conf}(\sB_m)}$
+     \textbf{Maximum Calibration Error}: $\ell_{\mathrm{MCE}} \defeq \max_{m} \abs{\mathrm{freq}(\sB_m) - \mathrm{conf}(\sB_m)}$
+\end{framed}
+\textbf{Histogram binning}: calculate $q_m=\text{freq}(B_m)$ on validation set and return $q_m$ when confidence is in $B_m$ during inference.\\
+\textbf{Platt scaling}: replace logits $z_i$ with $\sigma(az_i+b)$ and find the optimal $a,b$.\\
+\textbf{Temperature scaling}: Platt scaling with $b=0$ and $a=\frac{1}{T}$.
