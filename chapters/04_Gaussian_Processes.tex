@@ -12,8 +12,7 @@
 $f \mid \mathcal D \sim \GP{\mu'}{k'}$, $
   \mu'(\vx) \defeq \mu(\vx) + \transpose{\vk_{\vx,\sA}} \inv{(\mK_{\sA\sA} + \sigman^2 \mI)} (\vy_\sA - \vmu_\sA)$,\\
   $k'(\vx, \vxp) \defeq k(\vx, \vxp) - \transpose{\vk_{\vx,\sA}} \inv{(\mK_{\sA\sA} + \sigman^2 \mI)} \vk_{\vxp,\sA}$
-For GP-Regression ($y_{1:n} \mid \vx_{1:n}, \vtheta \sim \N{\vzero}{\mK_{f,\vtheta} + \sigman^2 \mI}$), write $\mK_{\vy,\vtheta} \defeq \mK_{f,\vtheta} + \sigman^2 \mI$, and obtain: $\vthetahat_\MLE = \argmin_{\vtheta} \frac{1}{2} \transpose{\vy} \inv{\mK_{\vy,\vtheta}} \vy + \frac{1}{2} \log \det{\mK_{\vy,\vtheta}}$. Also:
-$\pdv{}{\theta_j} \log p(y_{1:n} \mid \vx_{1:n}, \vtheta) = \frac{1}{2} \tr{(\valpha \transpose{\valpha} - \inv{\mK_{\vy,\vtheta}}) \pdv{\mK_{\vy,\vtheta}}{\theta_j}}$.\\
+For GP-Regression ($y_{1:n} \mid \vx_{1:n}, \vtheta \sim \N{\vzero}{\mK_{f,\vtheta} + \sigman^2 \mI}$), write $\mK_{\vy,\vtheta} \defeq \mK_{f,\vtheta} + \sigman^2 \mI$, and obtain: $\vthetahat_\MLE = \argmin_{\vtheta} \frac{1}{2} \transpose{\vy} \inv{\mK_{\vy,\vtheta}} \vy + \frac{1}{2} \log \det{\mK_{\vy,\vtheta}}$. \\
 \textbf{Cost}: $\BigO{n^3}$\\
 \textbf{Local methods}: Only condition on $\vxp$ where $\abs{k(\vx, \vxp)} \geq \tau$.\\
 \textbf{Kernel Approximation}: Construct a low dimensional feature map $\vphi : \R^d \to \R^m$ that approximates the kernel: $k(\vx, \vxp) \approx \transpose{\vphi(\vx)} \vphi(\vxp)$, then apply BLR\\

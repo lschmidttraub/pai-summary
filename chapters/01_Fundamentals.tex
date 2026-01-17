@@ -7,8 +7,6 @@
 \end{framed}
 \begin{framed}
     \textbf{Properties of Expectation:}\\
-    $\E{\mA \rX + \vb} = \mA \E{\rX} + \vb $; $ \E{\rX + \rY} = \E{\rX} + \E{\rY}$ \\
-    $\E{\rX\transpose{\rY}} = \E{\rX} \cdot \transpose{\E{\rY}}$ (if independant)\\
     $\E{\vg(\rX)} = \int_{\rX(\Omega)} \vg(\vx) \cdot p(\vx) \,d\vx$ (if $\vg$ nice and $\rX$ cont.) (\textbf{LOTUS})\\
     $\E[\rY]{\E[\rX]{\rX \mid \rY}} = \E{\rX}$ (\textbf{Tower rule})
 \end{framed} 
@@ -20,7 +18,6 @@
 \textbf{Properties of variance}:\\
 $\Var{\mA\rX + \vb} = \mA\Var{\rX}\transpose{\mA}$\\
 $\Var{\rX + \rY} = \Var{\rX} + \Var{\rY} + 2 \Cov{\rX, \rY}$\\
-$\Var{\rX + \rY} = \Var{\rX} + \Var{\rY}$ (if $\rX$, $\rY$ independant)
 $\Var{\rX} = \E[\rY]{\Var[\rX]{\rX \mid \rY}} + \Var[\rY]{\E[\rX]{\rX \mid \rY}}$ (\textbf{LOTV})
 \end{framed}
 \textbf{Jensen}: Given $g$ convex:

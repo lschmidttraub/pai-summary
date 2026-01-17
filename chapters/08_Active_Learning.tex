@@ -1,11 +1,10 @@
 \section{Active Learning}
 \begin{framed}
     $\H{\rX \mid \rY} \defeq \E[\vy \sim p]{\H{\rX \mid \rY = \vy}} \\= \E[\vx, \vy \sim p]{- \log p(\vx \mid \vy)}$ \\
-    $\H{\rX, \rY} \defeq \E[\vx, \vy \sim p]{- \log p(\vx, \vy)}$ 
-    \vspace{1mm}
+    $\H{\rX, \rY} \defeq \E[\vx, \vy \sim p]{- \log p(\vx, \vy)}$ \\
     $\H{\rX, \rY} = \H{\rY} + \H{\rX \mid \rY} = \H{\rX} + \H{\rY \mid \rX}$ \\
     $\H{\rX \mid \rY} = \H{\rY \mid \rX} + \H{\rX} - \H{\rY}$ (Bayes Rule) \\
-    $\H{\rX \mid \rY} \leq \H{\rX}$ (Information never hurts)
+    $\H{\rX \mid \rY} \leq \H{\rX}$ (Information never hurts)\\
     $\I{\rX}{\rY} \defeq \H{\rX} + \H{\rY} - \H{\rX, \rY}=\KL{p(x,y)}{p(x)p(y)}$\\
     $\I{\rX}{\rY}[\rZ] = \H{\rX \mid \rZ} - \H{\rX \mid \rY, \rZ}=\KL{p(x,y|z)}{p(x|z)p(y|z)}$. \\
     $\text{I}(\rX;\rY;\rZ) = \I{\rX}{\rZ} + \I{\rX}{\rY}[\rZ]$

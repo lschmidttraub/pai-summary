@@ -1,0 +1,13 @@
+\section{Filtering}
+\begin{framed}
+\textbf{Kalman filter}: 
+$X_0\sim\N{\vmu}{\mSigma}$\\
+$X_{t+1}=FX_t+\varepsilon_t$, $\varepsilon_t\sim\N{\vzero}{\Sigma_x}$\\
+$Y_t=HX_t+\eta_t$, $\eta_t\sim\N{\vzero}{\Sigma_y}$\\
+\end{framed}
+\textbf{Conditioning}: compute $p(x_t|y_{1:t})$ from observing $y_t$\\
+\textbf{Prediction}: compute $p(x_{t+1}|y_{1:t})$\\
+$X_{t+1}|y_{1:t+1}\sim\N{\vmu_{t+1},\mSigma_{t+1}}$, with 
+$\vmu_{t+1}=F_t\vmu_t +\mK_{t+1}(y_{t+1}-HF\vmu_t)$ and $\mSigma_{t+1}=(\mI-\mK_{t+1}H)(F_t\mSigma_t F_t^T+\mSigma_x)$\\
+\textbf{Kalman gain}:
+$\mK_{t+1} \defeq (F_t\mSigma_t F_t^T+\mSigma_x)H^T(H(F_t\mSigma_t F_t^T+\mSigma_x)H^T+\mSigma_y)^{-1}$\\
