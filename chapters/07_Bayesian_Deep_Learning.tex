@@ -9,12 +9,13 @@ where $\mu(\vx; \vtheta) \defeq f_1(\vx; \vtheta)$ and $\sigma^2(\vx; \vtheta) \
 \begin{framed}
     \textbf{Approximate inference}: \\
     \textbf{Variational inference}: $p(y^\star \mid \vx^\star, \mathcal D) \approx \E[\theta \sim q_\vlambda]{p(y^\star \mid \vx^\star, \vtheta)}\approx \frac{1}{m} \sum_{i=1}^m p(\ys \mid \vxs, \vtheta^{(i)})$.
-    \textbf{MCMC}: store $T$ snapshots $\theta^{(1)}, \ldots, \theta^{(T)}$ 
+    \textbf{MCMC/SWA}: store $T$ snapshots $\theta^{(1)}, \ldots, \theta^{(T)}$ 
     and sample from Gaussian approximation: $\theta\sim\N{\vmu}{\mSigma}$ with 
     $\vmu=\frac{1}{T}\sum_{i=1}^T \theta^{(i)}$ and \\$\mSigma=\frac{1}{T-1}\sum_{i=1}^T (\theta^{(i)} - \vmu)(\theta^{(i)} - \vmu)^T$.\\
     \textbf{Probabilistic ensembles}: run $m$ models on $m$ independently sampled datasets and average the predictions.
 \end{framed}
 \textbf{Dropout/Dropconnect}: we also need to perform dropout/dropconnect during inference.\\
+\includegraphics[width=0.2\textwidth]{images/SVGD.png}
 \begin{framed}
      \textbf{Expected calibration error}: For $m$ bins: $\ell_{\mathrm{ECE}} \defeq \sum_{m=1}^M \frac{\card{\sB_m}}{n} \abs{\mathrm{freq}(\sB_m) - \mathrm{conf}(\sB_m)}$
      \textbf{Maximum Calibration Error}: $\ell_{\mathrm{MCE}} \defeq \max_{m} \abs{\mathrm{freq}(\sB_m) - \mathrm{conf}(\sB_m)}$
@@ -22,4 +23,3 @@ where $\mu(\vx; \vtheta) \defeq f_1(\vx; \vtheta)$ and $\sigma^2(\vx; \vtheta) \
 \textbf{Histogram binning}: calculate $q_m=\text{freq}(B_m)$ on validation set and return $q_m$ when confidence is in $B_m$ during inference.\\
 \textbf{Platt scaling}: replace logits $z_i$ with $\sigma(az_i+b)$ and find the optimal $a,b$.\\
 \textbf{Temperature scaling}: Platt scaling with $b=0$ and $a=\frac{1}{T}$.\\
-\includegraphics[width=0.2\textwidth]{images/SVGD.png}

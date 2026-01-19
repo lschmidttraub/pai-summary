@@ -16,7 +16,7 @@ $\implies$ apply model-free techniques to the new objective\\
 \begin{framed}
 \textbf{Thompson sampling}: sample $f$ from posterior and maximize\\
 \textbf{Optimistic exploration}: optimize over set $\mathcal M(\mathcal D)$ of "plausible" models\\
-\textbf{H-CURL}: \\$\pi_{t+1}=\argmax_\pi \max_{\eta(\cdot)\in[-1,1]^d} J_H(\pi;\hat f_t)$ with 
+\textbf{H-UCRL}: \\$\pi_{t+1}=\argmax_\pi \max_{\eta(\cdot)\in[-1,1]^d} J_H(\pi;\hat f_t)$ with 
 $\hat f_t(x,a)=\mu_t(x,a)+\beta_t\eta(x,a)\sigma_t(x,a)$
 \end{framed}
 \textbf{Constrained optimization}: 

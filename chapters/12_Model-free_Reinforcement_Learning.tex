@@ -23,9 +23,9 @@ Can view TD-learning as SGD on the squared loss $\ell(\vtheta; x, r, x') \defeq 
     \textbf{Policy value function}: $\j{\varphi}=\j{\pi_\varphi} \defeq \E[\pi_\varphi]{G_0} = \E[\pi_\varphi]{\sum_{t=0}^\infty \gamma^t R_t}$ \\
     \textbf{Bounded variant}: $\j{\pi}[T] \defeq \E[\pi]{G_{0:T}}$\\
 \end{framed}
-\textbf{Score function trick}: $\grad_\varphi \E[\tau\sim\Pi_\varphi]{G_0} = \E[\tau\sim\Pi_\varphi]{G_0 \grad_\varphi \log \Pi_\varphi(\tau)}=\E[\tau\sim\Pi_\varphi]{G_0 \grad_\varphi \sum_{t=0}^{T-1}\log \pi_\varphi(a_t|x_t)}$.\\
+\textbf{Score function trick}: $\grad_\varphi \E[\tau\sim\Pi_\varphi]{G_0} = \E[\tau\sim\Pi_\varphi]{G_0 \grad_\varphi \log \Pi_\varphi(\tau)}=\E[\tau\sim\Pi_\varphi]{G_0  \sum_{t=0}^{T-1}\grad_\varphi\log \pi_\varphi(a_t|x_t)}$.\\
 Has \textbf{high variance} unlike the reparametrization trick.\\
-\textbf{Baseline}: $\E[\tau\sim\Pi_\varphi]{G_0\grad_\varphi\log\Pi_\varphi(\tau)}=\E[\tau\sim\Pi_\varphi]{\sum_{t=0}^{T-1}(G_0-b_t)\grad_\varphi\log\pi_\varphi(a_t|x_t)}$\\
+\textbf{Baseline}: $\E[\tau\sim\Pi_\varphi]{G_0\grad_\varphi\log\Pi_\varphi(\tau)}=\E[\tau\sim\Pi_\varphi]{\sum_{t=0}^{T-1}(G_0-b(\tau_{0:t-1}))\grad_\varphi\log\pi_\varphi(a_t|x_t)}$\\
 \begin{framed}
 \textbf{REINFORCE} (On/MF/C): 
 Select baseline $b_t=g_{0:t-1}$:
@@ -41,7 +41,8 @@ $\propto \mathbb E_{x\sim\rho_\varphi^\infty}\mathbb E_{a\sim\pi_\varphi(a|x)}\l
    Parameterized policy $\pi(\va \mid \vx; \vvarphi) \eqdef \pi_\vvarphi$ (actor)\\
    Value function approximation $\q[\pi_\vvarphi]{\vx}{\va} \approx \Q[\pi_\vvarphi]{\vx}{\va; \vtheta}$ (critic).\\
 \end{framed}
-\includegraphics[width=0.95\linewidth, trim={0 0 4cm 0}]{images/Online_actor_critic.png}
+\textbf{On-policy AC}: learn critic through SARSA and actor through policy gradient methods\\
+\includegraphics[width=0.68\linewidth, trim={0 0 4cm 0}]{images/Online_actor_critic.png}
 \textbf{Advantage}: $\a[\pi]{\vx}{\va} \defeq \q[\pi]{\vx}{\va} - \v[\pi]{\vx}$\\
 $\text{$\pi$ is optimal} \iff \forall \vx \in \spX, \va \in \spA : \a[\pi]{\vx}{\va} \leq 0$
 \textbf{Advantage actor-critic (A2C)}: replace $Q$ with advantage function $A$ (predicting sign is easier than predicting absolute quantity).\\
@@ -62,21 +63,24 @@ $\hat{A}_{t,i}=\frac{g_{t:T}^{(i)}-\text{mean}(g_{t:T})}{\text{std}(g_{t:T})}$\\
 \begin{framed}
 \textbf{Off-policy AC}:
 Parametrize maximum over actions with $\pi_\varphi$.\\
-Objective: $\varphi^\star=\argmax_\varphi J_\mu(\varphi)=\argmax_\varphi \E[x\sim\mu]{Q^\star(x,\pi_\varphi(x);\theta)}$\\
+Objective (\textbf{deterministic policy gradients}/\textbf{hill-climbing}): $\varphi^\star=\argmax_\varphi J_\mu(\varphi)=\argmax_\varphi \E[x\sim\mu]{Q^\star(x,\pi_\varphi(x);\theta)}$\\
+Learn critic through \textbf{bootstrapped} Q-learning \\
 The \textbf{exploration distribution} $\mu(x)$ is typically selected as uniform sampling from replay buffer.\\
 Exploration can be achieved through \textbf{Gaussian dithering} as in \textbf{DDPG}.\\
 \textbf{TD3} = DDPG with 2 critic networks for evaluating policy and calculating maximum.\\
 \end{framed}
-For randomized policies, we get:
+For randomized policies like \textbf{SVG}, we get:
  $J_\mu(\varphi)=\mathbb E_{x\sim\mu}\E[a\sim\pi_\varphi(\cdot|x)]{Q^\star(x,a;\theta)}$\\
  \textbf{Reparametrize} to get the gradient:
  $\grad_\varphi J_\mu(\varphi)=\mathbb E_{x\sim\mu}\E[\varepsilon\sim\phi]{D_a Q^\star(x,a)\big|_{a=g(\varepsilon;\varphi)} D_\varphi g(\varepsilon;\varphi)}$\\
 \textbf{MERL}: encourage exploration through new objective: $j_\lambda(\varphi)=j(\varphi)+\lambda \H{\Pi_\varphi}$\\
-$\H{\Pi_\varphi} \defeq \E[\tau\sim\Pi_\varphi]{\sum_{t=0}^{T-1}\log \pi_\varphi(a_t|x_t)}$\\
+$= \sum_{t=0}^\infty\E[(x_t,a_t)\sim\Pi_\varphi]{r(x_t,a_t)+\lambda\H{\pi_\varphi(\cdot|x_t)}}$\\
 Assuming HMM defined by $p(\mathcal O_t|x_t,a_t)\propto \exp\left(\frac{1}{\lambda} r(x_t,a_t)\right)$, we get:\\
 $\Pi_\star(\tau)=p(\tau|\mathcal O_{1:T})\propto \left[p(x_1)\prod_{t=1}^{T-1} p(x_{t+1}|x_t,a_t)\right]\exp\left(\frac{1}{\lambda}\sum_{t=1}^{T} r(x_t,a_t)\right)$\\
 The objective $\KL{\Pi_\star}{\Pi_\varphi}$ is equivalent to the MERL objective.\\
+\textbf{Soft-Actor-Critic} and \textbf{MAP optimization} are off-policy actor-critic methods with entropy regularization.\\
 \textbf{Soft-value function}: $q^\star(x,a)=\frac{1}{\lambda}r(x,a)+\E[x'\sim x,a]{\log\int_\spA \exp\left(q^\star(x',a')\right) da'}$\\
+Changes the value function, not just the objective\\
 \begin{framed}
     \textbf{Finetuning LLMs}:\\
     \textbf{Bradley-Terry model}: $p(y_A\succ y_B|x,r)=\sigma(r(y_A|x)-r(y_B|x))$\\

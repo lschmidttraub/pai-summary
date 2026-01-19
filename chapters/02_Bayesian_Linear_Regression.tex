@@ -10,16 +10,17 @@ $\vf \mid \mX \sim \N{\mPhi \E{\vw}}{\mPhi \Var{\vw} \transpose{\mPhi}} = \N{\vz
 \textbf{Kernel-function}: $k(\vx, \vxp) \defeq \sigmap^2 \cdot \transpose{\vphi(\vx)} \vphi(\vxp) = \Cov{f(\vx), f(\vxp)}$.
 \begin{framed}
     \textbf{Linear}: $k(\vx, \vxp) = l \transpose{\vx} \vxp$ \\
-    \textbf{RBF/Gaussian}: $k(\vx, \vxp) = \exp{-\frac{(\vx - \vxp)^2}{2\sigma_p^2}}$ \\
+    \textbf{RBF/Gaussian}: $k(\vx, \vxp) = \exp\left(-\frac{\norm{\vx - \vxp}_2^2}{2\sigma_p^2}\right)$ \\
     \textbf{Polynomial}: $k(\vx, \vxp) = (1 + \transpose{\vx} \vxp)^d$ \\
-    \textbf{Laplacian}: $k(\vx, \vxp) = \exp{\left(-\alpha \norm{\vx - \vxp}\right)}$
+    \textbf{Laplacian}: $k(\vx, \vxp) = \exp{\left(-\alpha \norm{\vx - \vxp}\right)}$\\
+    \textbf{Matern}: \\$\frac{2^{1-\nu}}{\Gamma(\nu)} \left(\sqrt{2\nu} \frac{\norm{\vx - \vxp}_2}{\sigma_p}\right)^\nu K_\nu\left(\sqrt{2\nu} \frac{\norm{\vx - \vxp}_2}{\sigma_p}\right)$
 \end{framed}
+\textbf{Stationary}: $k(\vx, \vxp) = k(\vx-\vxp)$\\
+\textbf{Isotropic}: $k(\vx, \vxp) = \tilde{k}(\norm{\vx-\vxp}_2)$.
 \begin{framed}
     \textbf{Properties of Kernels}:  \\
     $\mK_{\sA\sA}$ is \textbf{symmetric} and \textbf{p.s.d.} \\
     \textbf{Composition}: addition, multiplication, and composition with a function $f$ with positive coefficients in Taylor expansion.
     \textbf{Bochner's Theorem}: A continuous kernel on $\R^d$ is p.s.d iff its Fourier transform $p(\vomega)$ is non-negative.
 \end{framed}
-\textbf{Stationary}: $k(\vx, \vxp) = k(\vx-\vxp)$\\
-\textbf{Isotropic}: $k(\vx, \vxp) = \tilde{k}(\norm{\vx-\vxp}_2)$.
 \textbf{Cost}: $\BigO{d^3+nd^2}$, can be performed online with cost $\BigO{d^2}$ per iteration.

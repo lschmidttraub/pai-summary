@@ -4,16 +4,17 @@
     $f\sim \GP{\mu}{k}$ with $\mu : \spX \to \R$, $k : \spX \times \spX \to \R$\\
     $\forall\sA \defeq \{\vx_1, \dots, \vx_m\} \subseteq \spX: \vf_\sA  \sim \N{\vmu_\sA}{\mK_{\sA\sA}}$ 
 \end{framed}
-\begin{framed}
-    \textbf{Maximize Marginal Likelihood}: \\
-    $ \vthetahat_\MLE \defeq \argmax_{\vtheta} p(y_{1:n} \mid \vx_{1:n}, \vtheta) \\= \argmax_{\vtheta} \int p(y_{1:n} \mid \vx_{1:n}, f, \vtheta) p(f \mid \vtheta) \,d f$.
-\end{framed}
 \textbf{Posterior}: 
 $f \mid \mathcal D \sim \GP{\mu'}{k'}$, $
   \mu'(\vx) \defeq \mu(\vx) + \transpose{\vk_{\vx,\sA}} \inv{(\mK_{\sA\sA} + \sigman^2 \mI)} (\vy_\sA - \vmu_\sA)$,\\
   $k'(\vx, \vxp) \defeq k(\vx, \vxp) - \transpose{\vk_{\vx,\sA}} \inv{(\mK_{\sA\sA} + \sigman^2 \mI)} \vk_{\vxp,\sA}$
-For GP-Regression ($y_{1:n} \mid \vx_{1:n}, \vtheta \sim \N{\vzero}{\mK_{f,\vtheta} + \sigman^2 \mI}$), write $\mK_{\vy,\vtheta} \defeq \mK_{f,\vtheta} + \sigman^2 \mI$, and obtain: $\vthetahat_\MLE = \argmin_{\vtheta} \frac{1}{2} \transpose{\vy} \inv{\mK_{\vy,\vtheta}} \vy + \frac{1}{2} \log \det{\mK_{\vy,\vtheta}}$. \\
 \textbf{Cost}: $\BigO{n^3}$\\
+\begin{framed}
+    \textbf{Maximize Marginal Likelihood}: \\
+    $ \vthetahat_\MLE \defeq \argmax_{\vtheta} p(y_{1:n} \mid \vx_{1:n}, \vtheta) \\= \argmax_{\vtheta} \int p(y_{1:n} \mid \vx_{1:n}, f, \vtheta) p(f \mid \vtheta) \,d f$.\\
+    Write $\mK_{\vy,\vtheta} \defeq \mK_{f,\vtheta} + \sigman^2 \mI$, and obtain: $\vthetahat_\MLE = \argmin_{\vtheta} \frac{1}{2} \transpose{\vy} \inv{\mK_{\vy,\vtheta}} \vy + \frac{1}{2} \log \det{\mK_{\vy,\vtheta}}$. \\
+\end{framed}
+$\frac{\partial}{\partial \theta_j} \log p(y \mid X, \theta) = \frac{1}{2} \text{tr} \left( \left( \alpha \alpha^T - \mK_{\vy,\vtheta}^{-1} \right) \frac{\partial \mK_{\vy,\vtheta}}{\partial \theta_j} \right), \alpha=\mK_{\vy,\vtheta}^{-1}y$
 \textbf{Local methods}: Only condition on $\vxp$ where $\abs{k(\vx, \vxp)} \geq \tau$.\\
 \textbf{Kernel Approximation}: Construct a low dimensional feature map $\vphi : \R^d \to \R^m$ that approximates the kernel: $k(\vx, \vxp) \approx \transpose{\vphi(\vx)} \vphi(\vxp)$, then apply BLR\\
 \textbf{Random Fourier features}: given $k$ stationary, \\
@@ -26,5 +27,3 @@ $\phi(x)=\frac{1}{\sqrt{m}}[z_{\omega_1,b_1}(x),\ldots,z_{\omega_m,b_m}(x)]^T$ w
     \textbf{FITC}: assume diagonal covariance\\ 
     \textbf{Runtime}: $\BigO{nk^2}$
 \end{framed}
-Choosing kernel parameters: maximize marginal likelihood
-$\hat\theta=\arg\max_{\theta}\int p(y_{1:n}|f,x_{1:n},\theta)p(f|\theta)df$

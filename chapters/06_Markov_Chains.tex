@@ -25,8 +25,8 @@ Irreducible MC $\rightarrow$ ergodic MC use: $\mP' = \frac{1}{2}\mP + \frac{1}{2
     \textbf{Ergodic theorem} For an ergodic MC and a stat. dist. $\pi$ as well as $f : \sS \to \R$:
     $\frac{1}{n} \sum_{i=1}^n f(x_i) \almostsurely \sum_{x \in S} \pi(x) f(x) = \E[x \sim \pi]{f(x)}$, for $n\to\infty$ where $x_i \sim X_i \mid x_{i-1}$.
 \end{framed}
-\textbf{Acceptance distribution (Metropolis-Hastings)}: $\Bern{\alpha(\vxp \mid \vx)}$ where $\alpha(\vxp \mid \vx) \defeq \min \braces*{1, \frac{q(\vxp) r(\vx \mid \vxp)}{q(\vx) r(\vxp \mid \vx)}}$ to decide whether to follow the proposal yields a Markov chain with stationary distribution $p(\vx) = \frac{1}{Z} q(\vx)$.
-The stationary distribution of the simulated Markov chain is $p(\vx)$.
+\textbf{Acceptance distribution (Metropolis-Hastings)}: $\Bern{\alpha(\vxp \mid \vx)}$ where $\alpha(\vxp \mid \vx) \defeq \min \braces*{1, \frac{q(\vxp) r(\vx \mid \vxp)}{q(\vx) r(\vxp \mid \vx)}}$ to decide whether to follow 
+the proposal yields a Markov chain with stationary distribution $p(\vx) = \frac{1}{Z} q(\vx)$.
 \textbf{Gibbs distribution}: $p(\vx) = \frac{1}{Z} \exp(- f(\vx))$, $f$ is the \textbf{energy function}.\\
 $f$ convex $\implies$ $p$ \textbf{log-concave}.\\
 $\alpha(\vxp \mid \vx) = \min \braces*{1, \frac{r(\vx \mid \vxp)}{r(\vxp \mid \vx)} \exp(f(\vx) - f(\vxp))}$. \\
@@ -38,12 +38,12 @@ $\S{p(\vx)} = f(\vx) + \log Z$
     \textbf{HMC}: lift samples up to a higher dimension and use Hamiltonian dynamics to sample from the target distribution.
 \end{framed}
 \begin{framed}
-    \textbf{Diffusion}: Simulate Gaussian noising process as MC and learn backward process.
+    \textbf{Diffusion}: Simulate Gaussian noising process as MC and learn backward process.\\
     $q(x_t \mid x_{t-1}) = \mathcal N(x_{t};\sqrt{ 1-\beta_{t} }x_{t-1},\beta_{t}I)$\\
-    $q(x_t\mid x_0)=\mathcal N(x_{t};\sqrt{ \bar\alpha_{t} }x_{0}, 1-\bar\alpha_{t} ), \bar{\alpha}_{t}=\prod_{j=1}^t (1-\beta_{j})$\\
+    $q(x_t\mid x_0)=\mathcal N(x_{t};\sqrt{ \bar\alpha_{t} }x_{0}, 1-\bar\alpha_{t} ), \bar{\alpha}_{t}=\prod\limits_{j=1}^t (1-\beta_{j})$\\
     $q(x_{t-1}\mid x_t, x_0)=\mathcal N(x_{t-1};\mu'_{t}(x_{t},x_{0}),\beta_{t}'I)$\\
-    $\mu'_{t}(x_t,x_0)=\frac{(1-\bar{\alpha}_{t-1})\sqrt{ \alpha_{t} } }{1-\bar{\alpha}_{t} }x_{t}+ \frac{\beta_{t}\sqrt{ \bar{\alpha}_{t-1} } }{1-\bar\alpha_{t} }x_{0}$\\
+    $\mu'_{t}(x_t,x_0)=\frac{(1-\bar{\alpha}_{t-1})\sqrt{ \alpha_{t} } }{1-\bar{\alpha}_{t} }x_{t}+ \frac{1-\alpha_{t}\sqrt{ \bar{\alpha}_{t-1} } }{1-\bar\alpha_{t} }x_{0}$
+    $=\frac{1}{\sqrt{\alpha_t}}\left(x_{t} + \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_{t}}}\epsilon_\lambda(x_t,t)\right)$;
     $\beta_t'=\sigma_t^2$\\
-    $L_1=\log p_{\lambda}(x_{0}|x_{1})$\\
-    $L_t=\text{KL}(q(\cdot|x_{t},x_{0})\|p_{\lambda}(\cdot|x_{t}))$
+    $L_t=\frac{(1-\alpha_{t})^{2}}{\sigma_t^2(1-\bar{\alpha}_{t})\alpha_{t} }\| \epsilon- \epsilon_{\lambda}(x_{t},t)\|^{2}$\\
 \end{framed}
